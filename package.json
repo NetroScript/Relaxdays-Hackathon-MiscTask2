@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "generate": "node generate.js",
-    "run": "node index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "@remusao/smaz": "^1.9.1",

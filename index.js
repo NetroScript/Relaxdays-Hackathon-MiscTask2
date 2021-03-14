@@ -108,9 +108,9 @@ if(arguments.length === 0){
 
     const filename = arguments[0];
 
-    if (fs.existsSync(filename)){
+    if (fs.existsSync(path.join(output_path, filename))){
         if(filename.endsWith(".compressed")){
-            fs.readFile(filename, (err, data) => {
+            fs.readFile(path.join(output_path, filename), (err, data) => {
                 if (err != null){
                     console.log("An error happened while reading the file.")
                     console.log(err);
@@ -126,7 +126,7 @@ if(arguments.length === 0){
             })
         } else {
 
-            fs.readFile(filename, "utf-8", (err, data) => {
+            fs.readFile(path.join(output_path, filename), "utf-8", (err, data) => {
 
                 const size = Buffer.from(data).length;
 

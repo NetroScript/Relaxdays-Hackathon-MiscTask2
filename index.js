@@ -80,7 +80,7 @@ function decompress(file){
         case 1:
             return smaz_custom.decompress(file.subarray(1, file.length));
         case 2:
-            return usx.unishox2_decompress_simple(file.subarray(1, file.length), file.length);
+            return usx.unishox2_decompress_simple(file.subarray(1, file.length), file.length-1);
         case 3:
             return zlib.inflateRawSync(file.subarray(1, file.length)).toString();
     }
@@ -95,6 +95,7 @@ arguments = arguments.filter(argument => argument !== "--do-not-clean")
 if(arguments.length === 0){
     console.log("Following parameters are allowed: <input-file> <?output-path> <?output-filename>")
     console.log("\t <input-file>\t\t - the docker to be compressed or decompressed (judged by extension)")
+    console.log("\t\t\t\t   first looks for the file in the output path, if there no file is found it uses exactly the given path")
     console.log("\t <?output-path>\t\t - optional output path, by default /output")
     console.log("\t <?output-filename>\t - optional output file name, by default original name + .decompressed")
     console.log("\t --do-not-clean\t\t - optional parameter (possible at every position) - if this is added the script ")
@@ -106,11 +107,25 @@ if(arguments.length === 0){
         output_path = arguments[1];
     }
 
-    const filename = arguments[0];
+    let filename = arguments[0];
 
+
+    let completePath = "";
     if (fs.existsSync(path.join(output_path, filename))){
+        completePath = path.join(output_path, filename);
+    } else if(fs.existsSync(filename)){
+        completePath = filename;
+    }
+
+    output_path = path.resolve(output_path);
+    filename = path.basename(filename);
+
+
+
+    if (completePath !== ""){
+        console.log("Reading file: " + path.resolve(completePath));
         if(filename.endsWith(".compressed")){
-            fs.readFile(path.join(output_path, filename), (err, data) => {
+            fs.readFile(completePath, (err, data) => {
                 if (err != null){
                     console.log("An error happened while reading the file.")
                     console.log(err);
@@ -126,7 +141,7 @@ if(arguments.length === 0){
             })
         } else {
 
-            fs.readFile(path.join(output_path, filename), "utf-8", (err, data) => {
+            fs.readFile(completePath, "utf-8", (err, data) => {
 
                 const size = Buffer.from(data).length;
 
@@ -143,6 +158,7 @@ if(arguments.length === 0){
                     fs.writeFileSync(path.join(output_path, filename + ".compressed"), compressed);
                 }
 
+                console.log("Encoded using: " + (["None, file left unchanged", "SMAZ with custom codebook", "Unishox2", "zlib"])[compressed[0] % 4] )
                 console.log("Original filesize: " + size +" bytes - New size: " + compressed.length + " bytes. Space saved: " + (1-(compressed.length / size)).toFixed(2) + "%");
 
             })

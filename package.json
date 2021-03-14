@@ -4,7 +4,16 @@
   "main": "index.js",
   "license": "",
   "private": true,
+  "scripts": {
+    "generate": "node generate.js",
+    "run": "node index.js"
+  },
   "dependencies": {
-    "tsmaz": "^1.5.0"
+    "@remusao/smaz": "^1.9.1",
+    "@remusao/smaz-generate": "^1.9.1",
+    "glob": "^7.1.6",
+    "strip-comments": "^2.0.1",
+    "unishox2.siara.cc": "^1.0.1",
+    "zlib": "^1.0.5"
   }
 }

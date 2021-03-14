@@ -6,7 +6,7 @@ My participant ID in the challenge was: CC-VOL1-23
 
 ## DockerFileCompressor
 
-This is a NodeJS script to compress (and decompress) Dockerfiles. This repo solves the task of the Hackathon requiring compression of dockerfiles. The special thing about Dockerfiles is how small they are, so at small sizes most compression algorithms would actually add overhead.
+This is a NodeJS script to compress (and decompress) Dockerfiles. This repo solves the task of the Hackathon requiring compression of dockerfiles. The special thing about Dockerfiles is how small they are, and at very small sizes most compression algorithms would actually add overhead.
 
 A short overview how it works:
 

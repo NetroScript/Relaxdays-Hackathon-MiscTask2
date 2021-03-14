@@ -10,7 +10,7 @@ This is a NodeJS script to compress (and decompress) Dockerfiles. This repo solv
 
 A short overview how it works:
 
-The dockerfile is loaded and unneeded data is removed (unless the argument --do-not-clean is supplied):
+The dockerfile is loaded and unneeded data is removed (unless the argument `--do-not-clean` is supplied):
  * Comments
  * Mantainer Tag
  * Multiline Commands
@@ -26,7 +26,7 @@ The dockerfile is loaded and unneeded data is removed (unless the argument --do-
  * [Unishox2](https://github.com/siara-cc/Unishox) 
  * [zlib](https://zlib.net/)
  
- The original idea was using SMAZ with a codebook for Dockerfiles. This (included) codebook was created with the contained `generate.js` (the script loads and processes all Dockerfiles in the `referencefiles` folder) and then manually adjusted. As source about 1500 Dockerfiles were collected from GitHub. But during testing I came to the conclusion that Unishox2 had better compression in most cases.  
+ The original idea was using SMAZ with a codebook for Dockerfiles. This (included) codebook was created with the contained `generate.js` (the script loads and processes all Dockerfiles in the `referencefiles` folder) and then manually adjusted. As source about 1500 Dockerfiles were collected from GitHub. But during testing I came to the conclusion that Unishox2 had better compression in many cases.  
  
  For that reason I also compared SMAZ, Unishox and zlib against all those sourced Dockerfiles. Over all files the best compression was zlib because most of those sourced files were pretty big. But for very small files it was either Unishox2 or SMAZ. But for this challenge the focus is small files so I decided to just always use the algorithm producing the smallest size and add the small overhead of a byte to decide which algorithm to use when decompressing.
  
@@ -61,6 +61,7 @@ This tells you the options then. This looks like the following:
 $ node index.js
 Following parameters are allowed: <input-file> <?output-path> <?output-filename>
          <input-file>            - the docker to be compressed or decompressed (judged by extension)
+                                   first looks for the file in the output path, if there no file is found it uses exactly the given path
          <?output-path>          - optional output path, by default /output
          <?output-filename>      - optional output file name, by default original name + .decompressed
          --do-not-clean          - optional parameter (possible at every position) - if this is added the script
@@ -82,7 +83,8 @@ node index.js Dockerfile.compressed ./ restored.txt
 When you compress a file it shows you some info about original filesize and new filesize. If you for example compress the dockerfile of this repo (without the --do-not-clean parameter) it would show you the following:
 
 ```
-Original filesize: 175 bytes - New size: 82 bytes. Space saved: 0.53%
+Encoded using: SMAZ with custom codebook
+Original filesize: 175 bytes - New size: 79 bytes. Space saved: 0.55%
 ```
 
 ## Build Setup - Docker
